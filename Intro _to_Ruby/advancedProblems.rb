@@ -322,3 +322,218 @@ print fibonacci(6) # => [1, 1, 2, 3, 5, 8]
 puts
 print fibonacci(8) # => [1, 1, 2, 3, 5, 8, 13, 21]
 puts
+
+# Caesar Cipher
+# Write a method caesar_cipher that takes in a string and a number. The method should return a new string where every character of the original is shifted num characters in the alphabet.
+
+# Feel free to use this variable:
+# alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+def caesar_cipher(str, num)
+  	alphabet = "abcdefghijklmnopqrstuvwxyz"
+  	cipher = ""
+
+	str.each_char do |char|
+      	letterPos = alphabet.index(char)
+      	newPos = letterPos + num
+      	cipher += alphabet[newPos % 26] # mod so wraps arround
+    end
+  
+  	return cipher
+end
+
+puts caesar_cipher("apple", 1)    #=> "bqqmf"
+puts caesar_cipher("bootcamp", 2) #=> "dqqvecor"
+puts caesar_cipher("zebra", 4)    #=> "difve"
+
+# Vowel Cipher
+# Write a method vowel_cipher that takes in a string and returns a new string where every vowel becomes the next vowel in the alphabet.
+
+def vowel_cipher(string)
+	vowels = "aeiou"
+  	cipher = ""
+  
+ 	string.each_char do |char|
+    	if vowels.include?(char)
+        	idx = vowels.index(char)
+          	char = vowels[(idx + 1) % 5]
+        end
+      	cipher += char
+    end
+  
+  	return cipher
+end
+
+puts vowel_cipher("bootcamp") #=> buutcemp
+puts vowel_cipher("paper cup") #=> pepir cap
+
+# Double Letter Count
+# Write a method that takes in a string and returns the number of times that the same letter repeats twice in a row.
+
+def double_letter_count(string)
+	count = 0	
+  	(0...string.length).each do |i|
+      	if string[i] == string[i-1]
+     		count += 1
+        end
+    end
+  	return count
+end
+
+puts double_letter_count("the jeep rolled down the hill") #=> 3
+puts double_letter_count("bootcamp") #=> 1
+
+# Adjacent Sum
+# Write a method adjacent_sum that takes in an array of numbers and returns a new array containing the sums of adjacent numbers in the original array. See the examples.
+
+def adjacent_sum(arr)
+  	sum = []
+	arr.each.with_index do |num, i|
+      	nextNum = arr[i+1]
+      	if nextNum != nil
+      		sum.push(num + nextNum)
+        end
+    end
+  	return sum
+end
+
+print adjacent_sum([3, 7, 2, 11]) #=> [10, 9, 13], because [ 3+7, 7+2, 2+11 ]
+puts
+print adjacent_sum([2, 5, 1, 9, 2, 4]) #=> [7, 6, 10, 11, 6], because [2+5, 5+1, 1+9, 9+2, 2+4]
+puts
+
+# Pyramid Sum
+# Write a method pyramid_sum that takes in an array of numbers representing the base of a pyramid. The function should return a 2D array representing a complete pyramid with the given base. To construct a level of the pyramid, we take the sum of adjacent elements of the level below.
+
+# For example, the base [1, 4, 6] gives us the following pyramid
+#     15
+#   5   10
+# 1   4    6
+
+def pyramid_sum(base)
+	sum = [base]
+  	
+  	while sum.length < base.length
+  		sum.unshift(adj_sum(sum[0]))
+    end
+  
+  	return sum
+end
+
+def adj_sum(arr)
+	sum = []
+	arr.each.with_index do |num, i|
+      	nextNum = arr[i+1]
+      	if nextNum != nil
+      		sum.push(num + nextNum)
+        end
+    end
+  	return sum
+end
+
+print pyramid_sum([1, 4, 6]) #=> [[15], [5, 10], [1, 4, 6]]
+puts
+
+print pyramid_sum([3, 7, 2, 11]) #=> [[41], [19, 22], [10, 9, 13], [3, 7, 2, 11]]
+puts
+
+# All Else Equal
+# Write a method all_else_equal that takes in an array of numbers. The method should return the element of the array that is equal to half of the sum of all elements of the array. If there is no such element, the method should return nil.
+
+def all_else_equal(arr)
+	sum = 0
+  	
+  	arr.each do |num|
+    	sum += num
+    end
+  
+  	halfSum = sum/2
+  
+  	if arr.include?(halfSum)
+    	return halfSum
+    else
+      	return nil
+    end
+end
+
+p all_else_equal([2, 4, 3, 10, 1]) #=> 10, because the sum of all elements is 20
+p all_else_equal([6, 3, 5, -9, 1]) #=> 3, because the sum of all elements is 6
+p all_else_equal([1, 2, 3, 4])     #=> nil, because the sum of all elements is 10 and there is no 5 in the array
+
+# Anagrams
+# Write a method anagrams? that takes in two words and returns a boolean indicating whether or not the words are anagrams. Anagrams are words that contain the same characters but not necessarily in the same order. Solve this without using .sort
+
+def anagrams?(word1, word2)
+	return hashLetters(word1) == hashLetters(word2)
+end
+
+def hashLetters(word)
+	countLetters = Hash.new(0)
+  	
+  	word.each_char { |char| countLetters[char] += 1 }
+  
+  	return countLetters
+end
+
+puts anagrams?("cat", "act")          #=> true
+puts anagrams?("restful", "fluster")  #=> true
+puts anagrams?("cat", "dog")          #=> false
+puts anagrams?("boot", "bootcamp")    #=> false
+
+# Consonant Cancel
+# Write a method consonant_cancel that takes in a sentence and returns a new sentence where every word begins with it's first vowel.
+
+def consonant_cancel(sentence)
+  	newSentence = ""
+	sentence.split.each do |word|
+    	# puts word
+      	newSentence = newSentence + " " + find_vowel(word)
+    end
+  	return newSentence
+end
+
+def find_vowel(word)
+	vowels = "aeiou"
+  	
+  	word.each_char.with_index do |char, i|
+    	if vowels.include?(char)
+        	return word[i..-1]
+        end
+    end
+  
+  	return ""
+end
+
+puts consonant_cancel("down the rabbit hole") #=> "own e abbit ole"
+puts consonant_cancel("writing code is challenging") #=> "iting ode is allenging"
+
+# Same Char Collapse
+# Write a method same_char_collapse that takes in a string and returns a collapsed version of the string. To collapse the string, we repeatedly delete 2 adjacent characters that are the same until there are no such adjacent characters. If there are multiple pairs that can be collapsed, delete the leftmost pair. For example, we take the following steps to collapse "zzzxaaxy": zzzxaaxy -> zxaaxy -> zxxy -> zy
+
+def same_char_collapse(str)
+  reducible = true
+
+  while reducible
+    chars = str.split("")
+    reducible = false
+
+    chars.each.with_index do |char, i|
+      if chars[i] == chars[i + 1]
+        chars[i] = ""
+        chars[i + 1] = ""
+        reducible = true
+      end
+    end
+
+    str = chars.join("")
+  end
+
+  return str
+end
+
+puts same_char_collapse("zzzxaaxy")   #=> "zy"
+# because zzzxaaxy -> zxaaxy -> zxxy -> zy
+
+
+puts same_char_collapse("uqrssrqvtt") #=> "uv"
+# because uqrssrqvtt -> uqrrqvtt -> uqqvtt -> uvtt -> uv
